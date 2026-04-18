@@ -52,7 +52,7 @@ jobs:
         run: |
           REPO=$(echo "${{ github.repository }}" | tr '[:upper:]' '[:lower:]')
           ssh -i ~/.ssh/ec2-key -o StrictHostKeyChecking=no ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << EOF
-            cd /home/ubuntu/app
+            cd /home/ubuntu/app/issue-tracker-backend
             docker login ghcr.io -u ${{ github.actor }} --password-stdin <<< "${{ secrets.GITHUB_TOKEN }}"
             docker pull ghcr.io/${REPO}:latest
             docker-compose -f docker-compose.prod.yml up -d --no-deps backend
