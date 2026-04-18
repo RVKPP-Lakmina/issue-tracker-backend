@@ -1,6 +1,7 @@
 import { User } from "../../models/User";
 import { ApiError } from "../../utils/ApiError";
 import { signAccessToken, type AccessTokenPayload } from "../../utils/jwt";
+import { invalidateUsersCache } from "../core/core.service";
 
 type SignUpInput = {
     name: string;
@@ -35,6 +36,8 @@ export const signUp = async (payload: SignUpInput) => {
 
     const user = await User.create(payload);
     const token = issueToken({ sub: String(user._id), email: user.email, role: user.role });
+
+    await invalidateUsersCache();
 
     return { token, user: toSafeUser(user) };
 };
