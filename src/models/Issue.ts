@@ -30,4 +30,22 @@ const issueSchema = new Schema<IIssue>(
     { timestamps: true }
 );
 
+issueSchema.set("toJSON", {
+    virtuals: true,
+    versionKey: false,
+    transform: (_doc, ret: any) => {
+        ret.id = String(ret._id);
+        delete ret._id;
+    }
+});
+
+issueSchema.set("toObject", {
+    virtuals: true,
+    versionKey: false,
+    transform: (_doc, ret: any) => {
+        ret.id = String(ret._id);
+        delete ret._id;
+    }
+});
+
 export const Issue = model<IIssue>("Issue", issueSchema);
