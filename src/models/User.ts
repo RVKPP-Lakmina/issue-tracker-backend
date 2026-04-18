@@ -32,6 +32,24 @@ const userSchema = new Schema<IUser, UserModel, IUserMethods>(
     { timestamps: true }
 );
 
+userSchema.set("toJSON", {
+    virtuals: true,
+    versionKey: false,
+    transform: (_doc, ret: any) => {
+        ret.id = String(ret._id);
+        delete ret._id;
+    }
+});
+
+userSchema.set("toObject", {
+    virtuals: true,
+    versionKey: false,
+    transform: (_doc, ret: any) => {
+        ret.id = String(ret._id);
+        delete ret._id;
+    }
+});
+
 userSchema.pre("save", async function hashPassword() {
     if (!this.isModified("password")) {
         return;
