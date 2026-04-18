@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 import { pingRedis } from "../config/redis";
 import { authRouter } from "../modules/auth/auth.routes";
 import { issuesRouter } from "../modules/issues/issues.routes";
+import coreRouter from "../modules/core/core.routes";
 
 const rootRouter = Router();
 
@@ -20,5 +21,6 @@ rootRouter.get("/health", async (_req, res) => {
 
 rootRouter.use("/auth", authRouter);
 rootRouter.use("/issues", issuesRouter);
+rootRouter.use("/core", coreRouter);
 
 export { rootRouter };
