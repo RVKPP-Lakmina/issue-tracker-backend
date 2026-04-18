@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 import { Issue } from "../../models/Issue";
 import { ApiError } from "../../utils/ApiError";
 import { asyncHandler } from "../../utils/asyncHandler";
+import { validateUserExists } from "../../utils/objectId";
 
 export const listIssuesController = asyncHandler(async (req: Request, res: Response) => {
     const { search, status, priority, page = 1, pageSize = 10 } = req.query as unknown as {
@@ -64,12 +65,16 @@ export const createIssueController = asyncHandler(async (req: Request, res: Resp
         assignedToId?: string;
     };
 
+    if (assignedToId) {
+        await validateUserExists(assignedToId);
+    }
+
     const issue = await Issue.create({
         title,
         description,
         status,
         priority,
-        assignedTo: assignedToId ?? null,
+        assignedTo: assignedToId ? new mongoose.Types.ObjectId(assignedToId) : null,
         createdBy: req.user.sub
     });
 
@@ -105,6 +110,10 @@ export const updateIssueController = asyncHandler(async (req: Request, res: Resp
         priority?: "low" | "medium" | "high" | "critical";
         assignedToId?: string | null;
     };
+
+    if (updates.assignedToId) {
+        await validateUserExists(updates.assignedToId);
+    }
 
     if (updates.title !== undefined) issue.title = updates.title;
     if (updates.description !== undefined) issue.description = updates.description;
