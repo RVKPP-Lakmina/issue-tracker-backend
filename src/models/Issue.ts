@@ -8,6 +8,8 @@ export interface IIssue {
     description: string;
     status: IssueStatus;
     priority: IssuePriority;
+    project?: Types.ObjectId | null;
+    parentIssue?: Types.ObjectId | null;
     assignedTo?: Types.ObjectId | null;
     createdBy: Types.ObjectId;
     createdAt: Date;
@@ -24,6 +26,8 @@ const issueSchema = new Schema<IIssue>(
             default: "open"
         },
         priority: { type: String, enum: ["low", "medium", "high", "critical"], default: "medium" },
+        project: { type: Schema.Types.ObjectId, ref: "Project", default: null },
+        parentIssue: { type: Schema.Types.ObjectId, ref: "Issue", default: null },
         assignedTo: { type: Schema.Types.ObjectId, ref: "User", default: null },
         createdBy: { type: Schema.Types.ObjectId, ref: "User", required: true }
     },
