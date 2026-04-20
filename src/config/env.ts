@@ -11,6 +11,8 @@ const envSchema = z.object({
     REDIS_URL: z.string().min(1, "REDIS_URL is required"),
     JWT_ACCESS_SECRET: z.string().min(10, "JWT_ACCESS_SECRET must be at least 10 chars"),
     JWT_ACCESS_EXPIRES_IN: z.string().default("15m"),
+    JWT_REFRESH_SECRET: z.string().min(10, "JWT_REFRESH_SECRET must be at least 10 chars"),
+    JWT_REFRESH_EXPIRES_IN: z.string().default("1d"),
     BCRYPT_SALT_ROUNDS: z.coerce.number().int().min(8).max(15).default(10),
     LOG_LEVEL: z.enum(["error", "warn", "info", "http", "debug"]).default("info"),
     CORS_ORIGIN: z.string().default("*")
