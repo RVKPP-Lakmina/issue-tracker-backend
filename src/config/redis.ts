@@ -55,3 +55,33 @@ export const isTokenBlacklisted = async (token: string): Promise<boolean> => {
     const value = await redis.get(`blacklist:${token}`);
     return value === "1";
 };
+
+export const revokeRefreshToken = async (jti: string, ttlSeconds: number): Promise<void> => {
+    if (ttlSeconds <= 0) {
+        return;
+    }
+
+    const redis = getRedisClient();
+    await redis.setex(`refresh-revoked:${jti}`, ttlSeconds, "1");
+};
+
+export const isRefreshTokenRevoked = async (jti: string): Promise<boolean> => {
+    const redis = getRedisClient();
+    const value = await redis.get(`refresh-revoked:${jti}`);
+    return value === "1";
+};
+
+export const banTokenFootprint = async (fpHash: string, ttlSeconds: number): Promise<void> => {
+    if (ttlSeconds <= 0) {
+        return;
+    }
+
+    const redis = getRedisClient();
+    await redis.setex(`footprint-banned:${fpHash}`, ttlSeconds, "1");
+};
+
+export const isTokenFootprintBanned = async (fpHash: string): Promise<boolean> => {
+    const redis = getRedisClient();
+    const value = await redis.get(`footprint-banned:${fpHash}`);
+    return value === "1";
+};
