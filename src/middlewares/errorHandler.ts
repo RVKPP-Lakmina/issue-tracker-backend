@@ -30,7 +30,14 @@ export const errorHandler = (
     }
 
     if (error instanceof Error) {
-        logger.error(error.message, { stack: error.stack });
+        const meta: Record<string, unknown> = { stack: error.stack };
+
+        if (error instanceof ApiError) {
+            meta.statusCode = error.statusCode;
+            meta.details = error.details;
+        }
+
+        logger.error(error.message, meta);
     } else {
         logger.error("Non-error exception caught", { error });
     }
