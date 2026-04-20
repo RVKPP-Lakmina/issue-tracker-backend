@@ -8,6 +8,7 @@ process.env.API_PREFIX = "/api";
 process.env.MONGODB_URI = "mongodb://localhost:27017/issue_tracker_test";
 process.env.REDIS_URL = "redis://localhost:6379";
 process.env.JWT_ACCESS_SECRET = "this-is-a-test-secret-123";
+process.env.JWT_REFRESH_SECRET = "this-is-a-refresh-test-secret-123";
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 let app: Express;
