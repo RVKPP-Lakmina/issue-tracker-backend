@@ -93,8 +93,10 @@ export const listIssuesController = asyncHandler(async (req: Request, res: Respo
 
     const [data, total] = await Promise.all([
         Issue.find(filters)
-            .populate("assignedTo", "name email avatar")
-            .populate("createdBy", "name email avatar")
+            .populate("assignedTo", "name avatar")
+            .populate("project", "_id name")
+            .populate("createdBy", "_id name")
+            .populate("parentIssue", "_id title status")
             .sort({ createdAt: -1 })
             .skip(skip)
             .limit(pageSize),
@@ -176,7 +178,7 @@ export const createIssueController = asyncHandler(async (req: Request, res: Resp
         .populate("assignedTo", "name email avatar")
         .populate("project", "name code status")
         .populate("parentIssue", "title status")
-        .populate("createdBy", "name email avatar");
+        .populate("createdBy", "_id name");
 
     res.status(201).json(payload);
 });
@@ -269,7 +271,7 @@ export const updateIssueController = asyncHandler(async (req: Request, res: Resp
         .populate("assignedTo", "name email avatar")
         .populate("project", "name code status")
         .populate("parentIssue", "title status")
-        .populate("createdBy", "name email avatar");
+        .populate("createdBy", "_id name");
 
     res.status(200).json(payload);
 });
@@ -322,7 +324,7 @@ export const listProjectsController = asyncHandler(async (req: Request, res: Res
 
     const [data, total] = await Promise.all([
         Project.find(filters)
-            .populate("createdBy", "name email avatar")
+            .populate("createdBy", "_id name")
             .sort({ createdAt: -1 })
             .skip(skip)
             .limit(pageSize),
@@ -359,7 +361,7 @@ export const createProjectController = asyncHandler(async (req: Request, res: Re
         createdBy: req.user.sub
     });
 
-    const payload = await Project.findById(project._id).populate("createdBy", "name email avatar");
+    const payload = await Project.findById(project._id).populate("createdBy", "_id name");
 
     res.status(201).json({
         success: true,
@@ -393,7 +395,7 @@ export const updateProjectController = asyncHandler(async (req: Request, res: Re
 
     await project.save();
 
-    const payload = await Project.findById(project._id).populate("createdBy", "name email avatar");
+    const payload = await Project.findById(project._id).populate("createdBy", "_id name");
 
     res.status(200).json({
         success: true,
