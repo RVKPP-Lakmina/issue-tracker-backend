@@ -55,5 +55,6 @@ jobs:
             cd /home/ubuntu/app/issue-tracker-backend
             docker login ghcr.io -u ${{ github.actor }} --password-stdin <<< "${{ secrets.GITHUB_TOKEN }}"
             docker pull ghcr.io/${REPO}:latest
+            docker compose -f docker-compose.prod.yml down --rmi all
             docker-compose -f docker-compose.prod.yml up -d --no-deps backend
           EOF
